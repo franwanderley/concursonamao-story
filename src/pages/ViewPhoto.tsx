@@ -1,6 +1,6 @@
 import { Link, useNavigation, useRoute } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { Image, View, StyleSheet, Text, ImageBackground, Alert } from 'react-native';
+import { Image, View, StyleSheet, Text, ImageBackground, Alert, Keyboard } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons as Icon } from '@expo/vector-icons';
 import { api, People } from '../services/api';
@@ -26,6 +26,7 @@ export function ViewPhoto(){
    const [text, setText] = useState<string>('');
 
    async function sendPhoto(){
+      Keyboard.dismiss();
       setLoading(true);
       const createdIn = format(new Date(), 'dd/mm/yyyy', {
          locale: ptBR
@@ -34,21 +35,24 @@ export function ViewPhoto(){
       const dataImage = new FormData();
       dataImage.append('image', `${photo.base64}`);
 
-      const { link } = await axios({
+      const { link } = await api({
          method: 'POST',
          url: 'https://api.imgur.com/3/image',
          data: dataImage,
          headers: {
-            'Authorization': `Client-ID ${process.env.REACT_APP_IMG}`,
-            'Content-Type': 'multipart/form-data'
+            'Authorization': `Client-ID 864cda37e15513e`,
+            'Content-Type': 'application/x-www-form-urlencoded',
          }
       })
       .then(res => res.data.data as {link: string})
       .catch(error => {
+         console.log(error);
          return {link : null};
       });
-      if(!link)
-         return ;
+      if(!link){
+         Alert.alert('Não foi possivel criar o story');
+         navigation.navigate('Home');
+      }
 
        const data = {
           createdIn,
@@ -79,11 +83,11 @@ export function ViewPhoto(){
 
    return (
      <View style={styles.container}>
-        <ImageBackground style={styles.img} source={{uri: photo.uri}}>
+        <ImageBackground style={styles.img} source={{uri: photo?.uri}}>
            <View style={styles.publicar}>
               <View style={styles.perfil}>
-                  <Image style={styles.avatar} source={{uri: people.avatar}} />
-                  <Text style={{fontSize: 20, color: '#fff'}}>{people.name}</Text>
+                  <Image style={styles.avatar} source={{uri: people?.avatar}} />
+                  <Text style={{fontSize: 20, color: '#fff'}}>{people?.name}</Text>
               </View>
 
                <TouchableOpacity onPress={closePhoto} style={styles.btnClose}>

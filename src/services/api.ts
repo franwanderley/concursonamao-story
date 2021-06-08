@@ -12,5 +12,6 @@ export interface People{
 }
 
 export const api = axios.create({
+   // https://statuserver.herokuapp.com
    baseURL: 'https://statuserver.herokuapp.com'
 }); 

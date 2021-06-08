@@ -43,8 +43,11 @@ export function OpenStory(){
       const idDelete = await api.delete(`story/${p.idStory}?idPeople=${p.id}`)
       .then(res => res.data)
       .catch(() => null);
-      if(idDelete)
+      if(idDelete){
+         Alert.alert('Story apagado com sucesso!');
+         navigation.navigate('Home', {atualizar: true});
          peoples.shift();
+      }
       else
          Alert.alert('Não foi possivel apagar o story');
    }
@@ -74,16 +77,16 @@ export function OpenStory(){
          .then(res => res.data as People[])
          .catch(() => null);
 
-         //Deletar story apos passar dois dias
-         result?.map(async (p) => {
-            if(p.createdIn){
-                  const Ispassed = venceuStory(p.createdIn);
-               if(Ispassed){
-                  await api.delete(`story/${p.id}?idPeople=${p.id}`);
-               }
-            }
-            return 0;
-         });
+         //Deletar story apos passar dois dias ainda falta complementar
+         // result?.map(async (p) => {
+         //    if(p.createdIn){
+         //          const Ispassed = venceuStory(p.createdIn);
+         //       if(Ispassed){
+         //          await api.delete(`story/${p.id}?idPeople=${p.id}`);
+         //       }
+         //    }
+         //    return 0;
+         // });
          //Ordenar com o primeiro ser aquele que foi clicado na pagina Home
          if(result)
             setPeoples(result.sort((a, _) => {

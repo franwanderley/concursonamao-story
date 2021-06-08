@@ -3,6 +3,7 @@ import { useRoute } from '@react-navigation/native';
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, StyleSheet, FlatList, Text } from 'react-native';
 import { Header } from '../components/Header'; 
+import { Load } from '../components/Load';
 import { Storys } from '../components/Storys'; 
 import { api, People } from '../services/api'; 
 
@@ -13,7 +14,6 @@ export function Home(){
    const routes = useRoute();
    //Atualizar pagina principal após adicionar story 
    const data = routes?.params as {atualizar: boolean} | undefined;
-   console.log(process.env.REACT_APP_IMG);
 
    useEffect(() => {
       async function getLogin(){
@@ -35,7 +35,7 @@ export function Home(){
    }, [data]);
 
    if(!peoples)
-      return <Text style={{flex: 1, alignItems: 'center'}}>Carregando Story</Text>;
+      return <Load/>;
    return (
       <SafeAreaView style={styles.container}> 
          <Header/>
